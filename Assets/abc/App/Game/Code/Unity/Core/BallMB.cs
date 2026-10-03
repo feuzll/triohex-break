@@ -1,4 +1,5 @@
-﻿using R3;
+﻿using System.Collections.Generic;
+using R3;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -97,6 +98,22 @@ namespace abc.App.Game.Code.Unity.Core
             PhysicsBody.linearVelocity
                 = Quaternion.Euler(0, 0, surpriseJitter)
                   * PhysicsBody.linearVelocity;
+        }
+
+        private List<Collider2D> aoeBallCasts = new List<Collider2D>(10);
+        private void AOEBallCollision()
+        {
+            Physics2D.SyncTransforms();
+            var overlaps = Physics2D.OverlapCircle(transform.position,
+                GameplayState.UpgradesRuntimes[GameplayState.AOEBallRangeUpgradeType].Instance.Value,
+                ContextBind.CellSearchFilter, aoeBallCasts);
+            for (int i = 0; i < overlaps; i++)
+            {
+                CellMB cellMB;
+                aoeBallCasts[i].TryGetComponent<CellMB>(out cellMB);
+                Code.Pure.Interaction.BallAOEOverlapsCell
+                    .Raise(GameplayState, cellMB.Pure,  Mathf.Max(Pure.Strength/4, 1));
+            }
         }
         
         private void MaintainSpeed()

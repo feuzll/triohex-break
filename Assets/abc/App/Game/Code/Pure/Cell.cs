@@ -1,7 +1,6 @@
 ﻿using System;
 using abc.App.Game.Code.Pure.Interaction;
 using R3;
-
 namespace abc.App.Game.Code.Pure
 {
     public partial class Cell
@@ -54,6 +53,13 @@ namespace abc.App.Game.Code.Pure
                 (Slice slice, Cell cell) info = e;
                 if (info.cell == this)
                     ReceiveDamage(info.slice.Strength);
+            });
+
+            BallAOEOverlapsCell.New.Subscribe((e) =>
+            {
+                (Gameplay ctx, Cell cell, int damage) c = e;
+                if (c.cell == this)
+                    ReceiveDamage(c.damage);
             });
             
             ObserveScopeClear(scope);

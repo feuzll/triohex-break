@@ -35,7 +35,7 @@ namespace abc.App.Game.Code.Unity.Core
         internal HashSet<BallMB> Balls;
         
         [SerializeField] LayerMask sliceCellMask;
-        private ContactFilter2D _sliceFilter;
+        internal ContactFilter2D CellSearchFilter;
         private readonly RaycastHit2D[] SliceHits = new RaycastHit2D[32];
         private readonly Collider2D[] SliceOverlaps = new Collider2D[8];
         
@@ -63,7 +63,7 @@ namespace abc.App.Game.Code.Unity.Core
                 });
             }
             
-            _sliceFilter = new ContactFilter2D 
+            CellSearchFilter = new ContactFilter2D 
                 { useLayerMask = true, layerMask = sliceCellMask, useTriggers = true };
             
             FixedTick = gameObject.FixedUpdateAsObservable();
@@ -126,7 +126,7 @@ namespace abc.App.Game.Code.Unity.Core
             if (dist < 1e-4f)             // press with no movement
             {
                 n = Physics2D.OverlapCircle(a, State.Slice.BladeRadius,
-                    _sliceFilter, SliceOverlaps);
+                    CellSearchFilter, SliceOverlaps);
                 return MonoFieldCells
                     .Where(cell => SliceOverlaps.Contains(cell.Collider))
                     .Select(c => c.Pure).ToArray();
@@ -134,8 +134,8 @@ namespace abc.App.Game.Code.Unity.Core
 
             n = State.Slice.BladeRadius > 0f
                 ? Physics2D.CircleCast(a, State.Slice.BladeRadius,
-                    d / dist, _sliceFilter, SliceHits, dist)
-                : Physics2D.Linecast(a, b, _sliceFilter, SliceHits);
+                    d / dist, CellSearchFilter, SliceHits, dist)
+                : Physics2D.Linecast(a, b, CellSearchFilter, SliceHits);
 
             //Debug.Log($"slice hit count: {n}");
             

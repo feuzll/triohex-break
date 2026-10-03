@@ -80,6 +80,9 @@ namespace abc.App.Game.Code.Pure
         [OdinSerialize]
         public float BallsJitter { get; private set; } = 30;
         
+        [OdinSerialize]
+        public Incremental.IType AOEBallRangeUpgradeType { get; private set; } 
+        
 #if UNITY_5_3_OR_NEWER
         [DisableInPlayMode] [InlineProperty]
         [SerializeField] internal SerializableReactiveProperty<int> levelProperty;
