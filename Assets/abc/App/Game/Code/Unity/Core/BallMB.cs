@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using abc.App.Game.Code.Pure;
 using R3;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -52,8 +53,12 @@ namespace abc.App.Game.Code.Unity.Core
                 .Subscribe((e) =>
                 {
                     var (ctx, anyCell, ball) = e;
-                    if (ball == Pure && ctx == Pure.Context)
-                        RandomizeBounce();
+                    if (ball != Pure || ctx != Pure.Context)
+                        return;
+                    RandomizeBounce();
+                    if (Variation == Ball.Type.AOE)
+                        AOEBallCollision();
+                        
                 })
                 .AddTo(_tails);
         }
@@ -105,12 +110,11 @@ namespace abc.App.Game.Code.Unity.Core
         {
             Physics2D.SyncTransforms();
             var overlaps = Physics2D.OverlapCircle(transform.position,
-                GameplayState.UpgradesRuntimes[GameplayState.AOEBallRangeUpgradeType].Instance.Value,
+                GameplayState.IntProperties[GameplayState.AOEBallRangeType].Value,
                 ContextBind.CellSearchFilter, aoeBallCasts);
-            for (int i = 0; i < overlaps; i++)
+            for (var i = 0; i < overlaps; i++)
             {
-                CellMB cellMB;
-                aoeBallCasts[i].TryGetComponent<CellMB>(out cellMB);
+                aoeBallCasts[i].TryGetComponent<CellMB>(out var cellMB);
                 Code.Pure.Interaction.BallAOEOverlapsCell
                     .Raise(GameplayState, cellMB.Pure,  Mathf.Max(Pure.Strength/4, 1));
             }

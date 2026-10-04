@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using abc.App.Game.Code.Pure;
-using abc.App.Game.Code.Pure.Upgrades;
+using abc.App.Game.Code.Pure.UpgradableInt;
+using abc.App.Game.Code.Unity.Core.UpgradableInt;
 using R3;
 using R3.Triggers;
 using Sirenix.OdinInspector;
@@ -73,16 +74,29 @@ namespace abc.App.Game.Code.Unity.Core
             
             State.FieldCollision = FieldBorder.OnCollisionEnter2DAsObservable()
                 .Select(c => c.collider.GetComponent<BallMB>().Pure);
-
-
-            foreach (var (ballType,ballUpgradeType) in State.BallsSpeedUpgradesTypes)
-                new Incremental.Runtime(_runtime,
-                    Instantiate(ballUpgradeType as IncrementalUpgradeType)
-                        .runtimeTemplate, ballUpgradeType);
             
-            foreach (var (ballType,ballUpgradeType) in State.BallsPowersUpgradesTypes)
+
+            foreach (var (ballType,ballUpgradeType) in State.BallsSpeedTypes)
+            {
+                switch (ballUpgradeType)
+                {
+                    case IncrementalType incrementalType:
+                        new Incremental.Runtime(_runtime,
+                            Instantiate(incrementalType).runtimeTemplate, ballUpgradeType);
+                        break;
+                    case ConstantInt constantInt:
+                        new IIntProperty.Runtime(_runtime, Instantiate(constantInt), constantInt);
+                        break;
+                }
+            }
+
+            new Incremental.Runtime(_runtime,
+                Instantiate(((IncrementalType)State.AOEBallRangeType)).runtimeTemplate,
+                State.AOEBallRangeType); 
+
+            foreach (var (ballType,ballUpgradeType) in State.BallsPowersTypes)
                 new Incremental.Runtime(_runtime,
-                    Instantiate(ballUpgradeType  as IncrementalUpgradeType)
+                    Instantiate((IncrementalType)ballUpgradeType )
                         .runtimeTemplate, ballUpgradeType);
             
             

@@ -8,18 +8,14 @@ using Math =
     System.Math;
 #endif
 
-namespace abc.App.Game.Code.Pure.Upgrades
+namespace abc.App.Game.Code.Pure.UpgradableInt
 {
     [Serializable]
-    public class Incremental
+    public class Incremental : IIntProperty
     {
         private Runtime _runtime;
         private Gameplay.Runtime _gameplayRuntime;
         
-#if ODIN_INSPECTOR
-        [ReadOnly]
-#endif
-        [OdinSerialize] private IType _type;
         
 #if ODIN_INSPECTOR
         [ShowInInspector]
@@ -61,33 +57,30 @@ namespace abc.App.Game.Code.Pure.Upgrades
         public interface IType { }
         
         [Serializable]
-        public class Runtime
+        public class Runtime : IIntProperty.Runtime
         {
-            [OdinSerialize] public readonly Incremental Instance;
 
-            internal Runtime(Gameplay.Runtime gameplayRuntime, Incremental instance, IType type)
+            public Runtime(Gameplay.Runtime gameplayRuntime, Incremental instance, IPropertyType type) 
+                : base(gameplayRuntime, instance, type)
             {
                 if (instance._runtime != null || instance._gameplayRuntime != null) 
                     throw new NotSupportedException();
                 
-                Instance = instance;
-                Instance._type = type;
+                instance._runtime = this;
+                instance._gameplayRuntime = gameplayRuntime;
                 
-                Instance._runtime = this;
-                Instance._gameplayRuntime = gameplayRuntime;
+                if (instance.StartingValue <= 0)
+                    instance.StartingValue = 1;
                 
-                if (Instance.StartingValue <= 0)
-                    Instance.StartingValue = 1;
+                if (instance.MaxStep > 0 && instance.Step > instance.MaxStep)
+                    instance.Step = instance.MaxStep;
                 
-                if (Instance.MaxStep > 0 && Instance.Step > Instance.MaxStep)
-                    Instance.Step = Instance.MaxStep;
-                
-                Instance.Step = 0;
-                Instance._gameplayRuntime.Context.UpgradesRuntimes.Add(type, this);
+                instance.Step = 0;
             }
             
             internal void TryBuyNextStep()
             {
+                var Instance = this.Instance as  Incremental;
                 //guard
                 if (Instance.Step >= Instance.MaxStep )
                     return;

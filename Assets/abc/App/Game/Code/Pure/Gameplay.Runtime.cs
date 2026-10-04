@@ -13,7 +13,7 @@ namespace abc.App.Game.Code.Pure
             public Runtime(Gameplay context, Observable<float> tick)
             {
                 Context = context;
-                context.UpgradesRuntimes = new();
+                context.IntProperties = new();
                 
                 context.Tick = tick;
                 context.Tick.Subscribe(dt => context.Time += dt);
@@ -42,6 +42,12 @@ namespace abc.App.Game.Code.Pure
                         context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;
                 });
 
+                IIntProperty.NewInContext += (gameplay, property, type) =>
+                {
+                    if (gameplay != Context) return;
+                    Context.IntProperties[type] = property;
+                };
+                
                 foreach (var (resourceType, amount) in context.StartingResources)
                     new Resource(context, resourceType, amount);
                 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using abc.App.Game.Code.Pure.Upgrades;
+using abc.App.Game.Code.Pure.UpgradableInt;
 using ObservableCollections;
 using R3;
 using Sirenix.Serialization;
@@ -39,6 +39,7 @@ namespace abc.App.Game.Code.Pure
 #endif
         public ObservableHashSet<Ball> Balls { get; protected set; } = new();
         
+        //TODO: fill it via static Cell.New<GameplayRuntime> event
         public ObservableHashSet<Cell> RuntimePureCells { get; private set; }
         
         [OdinSerialize] public Slice Slice { get; internal set; }
@@ -63,15 +64,15 @@ namespace abc.App.Game.Code.Pure
 #if ODIN_INSPECTOR
         [TitleGroup("Model-Pure")]
 #endif
-        [OdinSerialize] internal Dictionary<Pure.Ball.Type, Incremental.IType>
-            BallsSpeedUpgradesTypes { get; set; }
+        [OdinSerialize] internal Dictionary<Pure.Ball.Type, IPropertyType>
+            BallsSpeedTypes { get; set; }
         
       
 #if ODIN_INSPECTOR
         [TitleGroup("Model-Pure")]
 #endif
-        [OdinSerialize] internal Dictionary<Pure.Ball.Type, Incremental.IType>
-            BallsPowersUpgradesTypes { get; set; }
+        [OdinSerialize] internal Dictionary<Pure.Ball.Type, IPropertyType>
+            BallsPowersTypes { get; set; }
         
         
 #if ODIN_INSPECTOR
@@ -81,7 +82,7 @@ namespace abc.App.Game.Code.Pure
         public float BallsJitter { get; private set; } = 30;
         
         [OdinSerialize]
-        public Incremental.IType AOEBallRangeUpgradeType { get; private set; } 
+        public IPropertyType AOEBallRangeType { get; private set; } 
         
 #if UNITY_5_3_OR_NEWER
         [DisableInPlayMode] [InlineProperty]
@@ -130,7 +131,7 @@ namespace abc.App.Game.Code.Pure
         [DisableInEditorMode]
         [HideReferenceObjectPicker]  
 #endif
-        [OdinSerialize] public Dictionary<Incremental.IType, Incremental.Runtime> UpgradesRuntimes { get; internal set; }
+        [OdinSerialize] public Dictionary<IPropertyType, IIntProperty> IntProperties { get; internal set; }
         
         internal void Validate()
         {
