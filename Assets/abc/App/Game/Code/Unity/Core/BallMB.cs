@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using abc.App.Game.Code.Pure;
 using R3;
 using Sirenix.OdinInspector;
@@ -61,6 +62,12 @@ namespace abc.App.Game.Code.Unity.Core
                         
                 })
                 .AddTo(_tails);
+
+            GameplayState.FieldCollision.Subscribe((ball) =>
+            {
+                if (ball == Pure && ball.Variation == Ball.Type.Sniper)
+                    RotateToClosestCellBindOrRandomly();
+            });
         }
         
         
@@ -96,6 +103,7 @@ namespace abc.App.Game.Code.Unity.Core
 
         private void RandomizeBounce()
         {
+            //Debug.Log("Random bounce");
             var surpriseJitter = Random
                 .Range(-GameplayState.BallsJitter, GameplayState.BallsJitter);
             // Debug.Log($"old velocity: {collision.rigidbody.linearVelocity}, " +
@@ -103,6 +111,34 @@ namespace abc.App.Game.Code.Unity.Core
             PhysicsBody.linearVelocity
                 = Quaternion.Euler(0, 0, surpriseJitter)
                   * PhysicsBody.linearVelocity;
+        }
+
+        private void RotateToClosestCellBindOrRandomly()
+        {
+            //Debug.Log("Sniper field border bounce trying...");
+            var cellsBinds = 
+                ContextBind.MonoFieldCells
+                    .Where(cb => cb.isActiveAndEnabled).ToArray();
+            if (cellsBinds.Length == 0)
+            {
+                RandomizeBounce();
+                return;
+            }
+            CellMB closest = null;
+            float bestSqr = float.MaxValue;
+            foreach (var cellBind in cellsBinds)
+            {
+                float d = (cellBind.transform.position - transform.position).sqrMagnitude;
+                if (d < bestSqr) { bestSqr = d; closest = cellBind; }
+            }
+
+            closest.transform.localScale *= 1.1f;
+            var newDir = closest.transform.position - transform.position;
+            PhysicsBody.linearVelocity = newDir.normalized * Pure.Speed;
+            //Debug.Log("Sniper field border bounce: success");
+            //Debug.Log($"this frame vel: {PhysicsBody.linearVelocity}");
+            // Observable.NextFrame()
+            //     .Subscribe(_ => Debug.Log($"next frame vel: {PhysicsBody.linearVelocity}"));
         }
 
         private List<Collider2D> aoeBallCasts = new List<Collider2D>(10);
@@ -122,12 +158,11 @@ namespace abc.App.Game.Code.Unity.Core
         
         private void MaintainSpeed()
         {
-            var targetSpeed = Pure.Speed;
             if (PhysicsBody.linearVelocity.magnitude == 0)
                 PhysicsBody.linearVelocity = Random.insideUnitCircle;
             
             PhysicsBody.linearVelocity =
-                PhysicsBody.linearVelocity.normalized * targetSpeed;
+                PhysicsBody.linearVelocity.normalized * Pure.Speed;
         }
 
         protected override void ClearBinds()
