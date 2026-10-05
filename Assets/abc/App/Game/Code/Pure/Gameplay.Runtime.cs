@@ -13,33 +13,33 @@ namespace abc.App.Game.Code.Pure
             public Runtime(Gameplay context, Observable<float> tick)
             {
                 Context = context;
-                context.IntProperties = new();
+                Context.IntProperties = new();
                 
-                context.Tick = tick;
-                context.Tick.Subscribe(dt => context.Time += dt);
-                context.Driver = this;
-                if (context.levelProperty.Value <= 0) context.levelProperty.Value = 1;
+                Context.Tick = tick;
+                Context.Tick.Subscribe(dt => Context.Time += dt);
+                Context.Driver = this;
+                if (Context.levelProperty.Value <= 0) Context.levelProperty.Value = 1;
                 
-                if (context.BreaksToNextLevel.Value <= 0) context.BreaksToNextLevel.Value = 1;
+                if (Context.BreaksToNextLevel.Value <= 0) Context.BreaksToNextLevel.Value = 1;
                 
-                context.RuntimePureCells = new();
+                Context.RuntimePureCells = new();
                 
-                context.BrokeAllFieldCells = context.BreaksToNextLevel
+                Context.BrokeAllFieldCells = Context.BreaksToNextLevel
                     .Select(b => b <= 0)
                     .DistinctUntilChanged()
                     .Where(b => b)
                     .AsUnitObservable();
 
-                context.BrokeAllFieldCells.Subscribe(_ => context.levelProperty.Value++);
+                Context.BrokeAllFieldCells.Subscribe(_ => Context.levelProperty.Value++);
                 
-                context.Resources = new();
-                context.Balls = new();
-                context.FieldSchemesCycle = new();
-                context.Level.Skip(1).Subscribe(level =>
+                Context.Resources = new();
+                Context.Balls = new();
+                Context.FieldSchemesCycle = new();
+                Context.Level.Skip(1).Subscribe(level =>
                 {
-                    var schemesCycleSize = context.FieldSchemesCycle.Count;
-                    context.BreaksToNextLevel.Value =
-                        context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;
+                    var schemesCycleSize = Context.FieldSchemesCycle.Count;
+                    Context.BreaksToNextLevel.Value =
+                        Context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;
                 });
 
                 IIntProperty.NewInContext += (gameplay, property, type) =>
@@ -48,8 +48,8 @@ namespace abc.App.Game.Code.Pure
                     Context.IntProperties[type] = property;
                 };
                 
-                foreach (var (resourceType, amount) in context.StartingResources)
-                    new Resource(context, resourceType, amount);
+                foreach (var (resourceType, amount) in Context.StartingResources)
+                    new Resource(Context, resourceType, amount);
                 
             }
         }

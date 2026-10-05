@@ -84,6 +84,9 @@ namespace abc.App.Game.Code.Pure
         [OdinSerialize]
         public IPropertyType AOEBallRangeType { get; private set; } 
         
+        [OdinSerialize]
+        public IPropertyType SplitterBallDivideCountType { get; private set; }
+        
 #if UNITY_5_3_OR_NEWER
         [DisableInPlayMode] [InlineProperty]
         [SerializeField] internal SerializableReactiveProperty<int> levelProperty;
@@ -92,7 +95,10 @@ namespace abc.App.Game.Code.Pure
 #endif 
         public ReadOnlyReactiveProperty<int> Level => levelProperty; 
 
-        internal List<FieldScheme> FieldSchemesCycle { get; private set; } = new List<FieldScheme>();
+#if ODIN_INSPECTOR
+        [ShowInInspector, ReadOnly, TitleGroup("Model-Pure")]
+#endif
+        internal List<FieldScheme> FieldSchemesCycle { get; private set; }
         
         
 #if UNITY_5_3_OR_NEWER

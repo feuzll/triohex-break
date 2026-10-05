@@ -8,6 +8,7 @@
             AOE,
             Sniper,
             Splitter,
+            OneHit,
             Poison,
         }
     }

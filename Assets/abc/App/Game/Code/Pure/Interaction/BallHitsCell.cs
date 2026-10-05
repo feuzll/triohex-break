@@ -11,7 +11,8 @@ namespace abc.App.Game.Code.Pure.Interaction
         
         internal static void Raise(Gameplay context, Cell cell, Ball ball)
         {
-            newEvent.OnNext((context, cell, ball));
+            if (ball != null) //TODO: sometimes this somehow happen?  
+                newEvent.OnNext((context, cell, ball));
         }
     }
 }

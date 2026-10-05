@@ -21,10 +21,15 @@ namespace abc.App.Game.Code.Unity.Core
         
         private CompositeDisposable  _tails;
 
-        internal void BindToCombo(GameplayMB gameplayMB, Pure.Ball ball)
+        internal void BindToCombo(GameplayMB gameplayMB, Pure.Ball ball, 
+            Vector2? initialVelocity = null, Vector2? initialPosition = null)
         {
             contextBindField =  gameplayMB;
             Pure = ball;
+            if (initialVelocity != null)
+                PhysicsBody.linearVelocity = initialVelocity.Value;
+            if (initialPosition != null)
+                transform.position = initialPosition.Value;
         }
 
         protected override void OnNewPureState()
@@ -65,8 +70,16 @@ namespace abc.App.Game.Code.Unity.Core
 
             GameplayState.FieldCollision.Subscribe((ball) =>
             {
+                if (Pure == null) return;
                 if (ball == Pure && ball.Variation == Ball.Type.Sniper)
                     RotateToClosestCellBindOrRandomly();
+            });
+            
+            GameplayState.FieldCollision.Subscribe((ball) =>
+            {
+                if (Pure == null) return;
+                if (ball == Pure && ball.Variation == Ball.Type.Splitter)
+                    Code.Pure.Interaction.SplitterBallHitsWall.Raise(GameplayState, ball);
             });
         }
         

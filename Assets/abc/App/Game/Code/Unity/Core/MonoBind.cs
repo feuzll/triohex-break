@@ -21,9 +21,9 @@ namespace abc.App.Game.Code.Unity.Core
             {
                 if (Pure != null)
                 {
-                    ClearBinds();
                     _onPureClear.OnNext(Unit.Default);
                 }
+                ClearBinds();
 
                 _pureField = value;
                 OnNewPureState();

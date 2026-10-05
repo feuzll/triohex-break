@@ -8,6 +8,7 @@ using R3.Triggers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace abc.App.Game.Code.Unity.Core
 {
@@ -43,6 +44,10 @@ namespace abc.App.Game.Code.Unity.Core
         internal Observable<Unit> FixedTick { get; private set; }
 
         [SerializeField] private HashSet<IBallPurchase> _ballPurchaseSources;
+        [SerializeField] private ObjectPool<BallMB> _oneHitBallsPool;
+        
+        private Vector2 newOneHitBallVelocity = Vector2.up;
+        private Vector2 newOneHitBallPosition = Vector2.zero;
         
         private void Awake()
         {
@@ -74,8 +79,51 @@ namespace abc.App.Game.Code.Unity.Core
             
             State.FieldCollision = FieldBorder.OnCollisionEnter2DAsObservable()
                 .Select(c => c.collider.GetComponent<BallMB>().Pure);
-            
 
+
+            _oneHitBallsPool = new (
+                createFunc: () =>
+                {
+                    BallPrefabs[Ball.Type.OneHit].gameObject.SetActive(false);
+                    var newBallBind = Instantiate(BallPrefabs[Ball.Type.OneHit]);
+                    newBallBind.gameObject.SetActive(false);
+                    Pure.Interaction.BallHitsCell.New.Subscribe(info =>
+                    {
+                        if (info.Item1 == State && info.Item3 == newBallBind.Pure)
+                            _oneHitBallsPool.Release(newBallBind);
+                    }).AddTo(newBallBind);
+                    return newBallBind;
+                },
+                actionOnGet: mb =>
+                {
+                    mb.BindToCombo(this,
+                        new Ball(State, Ball.Type.OneHit, mb),
+                        newOneHitBallVelocity, newOneHitBallPosition);
+                    mb.gameObject.SetActive(true);
+                },
+                actionOnRelease: mb =>
+                {
+                    mb.ContextBind = null;
+                    mb.gameObject.SetActive(false);
+                },
+                actionOnDestroy: null,
+                collectionCheck: true,
+                defaultCapacity: 20,
+                maxSize: 20000
+                );
+            
+            
+            Pure.Interaction.SplitterBallHitsWall.New.Subscribe(info =>
+            {
+                for (var i = 0; i < State.IntProperties[State.SplitterBallDivideCountType].Value; i++)
+                {
+                    var parentSplitterBall = Balls.First(x => x.Pure == info.Item2); 
+                    newOneHitBallVelocity = parentSplitterBall.PhysicsBody.linearVelocity;
+                    newOneHitBallPosition = parentSplitterBall.transform.position;
+                    var newOneHitBallScope = _oneHitBallsPool.Get();
+                }
+            });
+            
             foreach (var (ballType,ballUpgradeType) in State.BallsSpeedTypes)
             {
                 switch (ballUpgradeType)
@@ -93,6 +141,10 @@ namespace abc.App.Game.Code.Unity.Core
             new Incremental.Runtime(_runtime,
                 Instantiate(((IncrementalType)State.AOEBallRangeType)).runtimeTemplate,
                 State.AOEBallRangeType); 
+            
+            new Incremental.Runtime(_runtime,
+                Instantiate(((IncrementalType)State.SplitterBallDivideCountType)).runtimeTemplate,
+                State.SplitterBallDivideCountType); 
 
             foreach (var (ballType,ballUpgradeType) in State.BallsPowersTypes)
                 new Incremental.Runtime(_runtime,
@@ -118,7 +170,7 @@ namespace abc.App.Game.Code.Unity.Core
                     Input.GetMouseButtonUp(0));
             
             
-            foreach (var cellMB in MonoFieldCells) 
+            foreach (var cellMB in MonoFieldCells.ToArray()) 
                 cellMB.ContextBind = this;
             
             foreach (var fieldSchemeMB in MonoFieldSchemesCycle) 
