@@ -1,4 +1,6 @@
-﻿using abc.App.Game.Code.Pure;
+﻿using System;
+using abc.App.Game.Code.Pure;
+using abc.App.Game.Code.Pure.UpgradableInt;
 using abc.App.Game.Code.Unity.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,5 +19,20 @@ namespace abc.App.Game.Code.Unity.View
 
         [field:SerializeField]
         public Ball.Type BallType { get; private set; }
+        
+        [SerializeField] private TMPro.TextMeshProUGUI costIndicator;
+        [SerializeField] private GameplayMB gameBind;
+        
+        private void Start()
+        {
+            var incrementalCost = gameBind.State
+                .IntProperties[gameBind.State.BallCostsTypes[BallType]] as Incremental;
+            costIndicator.text = incrementalCost.NextStepCost.ToString();
+            incrementalCost.NewStep +=
+                step =>
+                {
+                    costIndicator.text = incrementalCost.NextStepCost.ToString();
+                };
+        }
     }
 }

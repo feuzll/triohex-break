@@ -58,7 +58,12 @@ namespace abc.App.Game.Code.Pure
         [TitleGroup("Model-Pure")]
 #endif
         [OdinSerialize]
-        internal Dictionary<Pure.Ball.Type, int> BallCosts { get; private set; }
+        public Dictionary<Pure.Ball.Type, IPropertyType> BallCostsTypes { get; private set; }
+        
+#if ODIN_INSPECTOR
+        [ShowInInspector, ReadOnly, TitleGroup("Model-Pure")]
+#endif
+        public Dictionary<Pure.Ball.Type, IIntProperty.Runtime> BallCostsRuntimes { get; private set; }
       
       
 #if ODIN_INSPECTOR
@@ -110,15 +115,6 @@ namespace abc.App.Game.Code.Pure
         internal ReactiveProperty<int> BreaksToNextLevel => breaksToNextLevelProperty;
         
         protected Observable<Unit> BrokeAllFieldCells { get; private set; }
-        
-        protected bool TryBuyBall(Ball.Type type, Func<Ball.Type,Ball> spawnBallCallback)
-        {
-            var basicResource = Resources[Resource.Type.Basic];
-            if (basicResource.Amount.CurrentValue < BallCosts[type]) return false;
-            basicResource.AmountProperty.Value -= BallCosts[type];
-            Balls.Add(spawnBallCallback(type));
-            return true;
-        }
         
         public Observable<float> Tick { get; internal set; }
         internal Observable<Ball> FieldCollision { get; set; }

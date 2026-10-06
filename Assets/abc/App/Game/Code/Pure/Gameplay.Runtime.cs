@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using R3;
 
 namespace abc.App.Game.Code.Pure
@@ -14,6 +15,7 @@ namespace abc.App.Game.Code.Pure
             {
                 Context = context;
                 Context.IntProperties = new();
+                Context.BallCostsRuntimes = new();
                 
                 Context.Tick = tick;
                 Context.Tick.Subscribe(dt => Context.Time += dt);
@@ -42,10 +44,15 @@ namespace abc.App.Game.Code.Pure
                         Context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;
                 });
 
-                IIntProperty.NewInContext += (gameplay, property, type) =>
+                IIntProperty.NewInContext += (gameplay, intRuntime) =>
                 {
                     if (gameplay != Context) return;
-                    Context.IntProperties[type] = property;
+                    Context.IntProperties[intRuntime.instanceType] = intRuntime.Instance;
+                    if (Context.BallCostsTypes.ContainsValue(intRuntime.instanceType))
+                        Context.BallCostsRuntimes.Add(
+                            Context.BallCostsTypes
+                                .First(info=> 
+                                    info.Value == intRuntime.instanceType).Key, intRuntime);
                 };
                 
                 foreach (var (resourceType, amount) in Context.StartingResources)

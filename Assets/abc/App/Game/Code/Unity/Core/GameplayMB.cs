@@ -151,6 +151,11 @@ namespace abc.App.Game.Code.Unity.Core
                     Instantiate((IncrementalType)ballUpgradeType )
                         .runtimeTemplate, ballUpgradeType);
             
+            foreach (var (ballType,ballUpgradeType) in State.BallCostsTypes)
+                new Incremental.Runtime(_runtime,
+                    Instantiate((IncrementalType)ballUpgradeType)
+                        .runtimeTemplate, ballUpgradeType);
+            
             
 
             this.State.Tick.Subscribe(_ =>

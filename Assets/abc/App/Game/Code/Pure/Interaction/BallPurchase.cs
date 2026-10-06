@@ -1,4 +1,5 @@
 ﻿using System;
+using abc.App.Game.Code.Pure.UpgradableInt;
 
 namespace abc.App.Game.Code.Pure.Interaction
 {
@@ -11,13 +12,12 @@ namespace abc.App.Game.Code.Pure.Interaction
                 throw new ArgumentNullException(nameof(provideScopeCallback));
             
             var basicResource = context.Resources[Resource.Type.Basic];
-            if (basicResource.Amount.CurrentValue < context.BallCosts[type])
+            if (((Incremental.Runtime)context.BallCostsRuntimes[type]).TryBuyNextStep() == false)
             {
                 ball = null;
                 return false;
             }
-
-            basicResource.AmountProperty.Value -= context.BallCosts[type];
+            
             ball = new Ball(context, type, provideScopeCallback());
             return true;
         }
