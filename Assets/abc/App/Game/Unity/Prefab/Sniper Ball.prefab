@@ -180,5 +180,5 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Variation
       Entry: 3
-      Data: 1
+      Data: 2
   contextBindField: {fileID: 0}

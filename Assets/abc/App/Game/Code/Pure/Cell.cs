@@ -15,6 +15,9 @@ namespace abc.App.Game.Code.Pure
         public Observable<Unit> Broke;
         
         public IConceptScope<Cell> Scope { get; private set; }
+
+        private bool IsPoisoned = false;
+        
         public Cell(Gameplay context, Type type, IConceptScope<Cell> scope, bool activeOnCreation)
         {
             Scope = null;
@@ -36,6 +39,7 @@ namespace abc.App.Game.Code.Pure
             
             context.Level.Skip(1).Subscribe((newLevel) =>
             {
+                IsPoisoned = false;
                 HealthProperty.Value = context.FieldSchemesCycle[
                         (newLevel-1)%context.FieldSchemesCycle.Count]
                     .CellsAsObstacles.Contains(this) ? newLevel : 0;
@@ -44,6 +48,8 @@ namespace abc.App.Game.Code.Pure
             BallHitsCell.New.Subscribe((e) =>
             {
                 (Gameplay ctx, Cell cell, Ball ball) c = e;
+                if (c.cell == this && c.ball.Variation == Ball.Type.Poison)
+                    IsPoisoned = true;
                 if (c.cell == this)
                     ReceiveDamage(c.ball.Strength);
             });
@@ -77,6 +83,7 @@ namespace abc.App.Game.Code.Pure
         private void ReceiveDamage(int amount)
         {
             if (HealthProperty.Value <= 0) return;
+            if (IsPoisoned) amount *= 2;
             var actualDamage = amount > HealthProperty.Value ? HealthProperty.Value : amount;
             HealthProperty.Value -= actualDamage;
             _context.Resources[Resource.Type.Basic].AmountProperty.Value += actualDamage;
