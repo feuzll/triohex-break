@@ -43,6 +43,7 @@ namespace abc.App.Game.Code.Unity.Core
         
         internal Observable<Unit> FixedTick { get; private set; }
 
+        [SerializeField] private HashSet<UpgradableInt.IPurchase> _upgradeSources;
         [SerializeField] private HashSet<IBallPurchase> _ballPurchaseSources;
         [SerializeField] private ObjectPool<BallMB> _oneHitBallsPool;
         
@@ -67,6 +68,14 @@ namespace abc.App.Game.Code.Unity.Core
                     if (success)  ((BallMB)newBall.Scope)
                         .BindToCombo(this, newBall);
                 });
+            }
+
+            foreach (var purchase in _upgradeSources)
+            {
+                purchase.BuyButton.onClick.AddListener((() =>
+                {
+                    var success = Pure.Interaction.UpgradeIntProperty.Try(State, purchase.PropertyType);
+                }));
             }
             
             CellSearchFilter = new ContactFilter2D 
@@ -115,7 +124,7 @@ namespace abc.App.Game.Code.Unity.Core
             
             Pure.Interaction.SplitterBallHitsWall.New.Subscribe(info =>
             {
-                for (var i = 0; i < State.IntProperties[State.SplitterBallDivideCountType].Value; i++)
+                for (var i = 0; i < State.IntProperties[State.SplitterBallDivideCountType].Instance.Value; i++)
                 {
                     var parentSplitterBall = Balls.First(x => x.Pure == info.Item2); 
                     newOneHitBallVelocity = parentSplitterBall.PhysicsBody.linearVelocity;

@@ -145,7 +145,7 @@ namespace abc.App.Game.Code.Unity.Core
                 if (d < bestSqr) { bestSqr = d; closest = cellBind; }
             }
 
-            closest.transform.localScale *= 1.1f;
+            //closest.transform.localScale *= 1.1f;
             var newDir = closest.transform.position - transform.position;
             PhysicsBody.linearVelocity = newDir.normalized * Pure.Speed;
             //Debug.Log("Sniper field border bounce: success");
@@ -159,7 +159,7 @@ namespace abc.App.Game.Code.Unity.Core
         {
             Physics2D.SyncTransforms();
             var overlaps = Physics2D.OverlapCircle(transform.position,
-                GameplayState.IntProperties[GameplayState.AOEBallRangeType].Value,
+                GameplayState.IntProperties[GameplayState.AOEBallRangeType].Instance.Value,
                 ContextBind.CellSearchFilter, aoeBallCasts);
             for (var i = 0; i < overlaps; i++)
             {

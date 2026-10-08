@@ -7,7 +7,7 @@ namespace abc.App.Game.Code.Pure
     public partial interface IIntProperty
     {
         public int Value { get; }
-        public static event Action<Gameplay, Runtime> NewInContext;
+        //public static event Action<Gameplay, Runtime> NewInContext;
 
         public class Runtime
         {
@@ -16,9 +16,11 @@ namespace abc.App.Game.Code.Pure
 
             public Runtime(Gameplay.Runtime gameplayRuntime, IIntProperty instance, IPropertyType type)
             {
+                if (gameplayRuntime is null) throw new ArgumentNullException(nameof(gameplayRuntime));
                 Instance = instance;
                 instanceType = type;
-                NewInContext?.Invoke(gameplayRuntime.Context, this);
+                gameplayRuntime.Context.IntProperties[instanceType] = this;
+                //NewInContext?.Invoke(gameplayRuntime.Context, this);
             }
         }
     }

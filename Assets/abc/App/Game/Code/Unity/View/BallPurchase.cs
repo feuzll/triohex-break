@@ -21,12 +21,13 @@ namespace abc.App.Game.Code.Unity.View
         public Ball.Type BallType { get; private set; }
         
         [SerializeField] private TMPro.TextMeshProUGUI costIndicator;
-        [ReadOnly] [ShowInInspector] private GameplayMB gameBind;
+        [InfoBox("For manual set (view-observer role)")]
+        [SerializeField] private GameplayMB gameBind;
         
         private void Start()
         {
             var incrementalCost = gameBind.State
-                .IntProperties[gameBind.State.BallCostsTypes[BallType]] as Incremental;
+                .IntProperties[gameBind.State.BallCostsTypes[BallType]].Instance as Incremental;
             costIndicator.text = incrementalCost.NextStepCost.ToString();
             incrementalCost.NewStep +=
                 step =>

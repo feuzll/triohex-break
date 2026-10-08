@@ -11,8 +11,8 @@ namespace abc.App.Game.Code.Pure
         internal readonly Gameplay Context;
         public readonly Type Variation;
 
-        public int Speed => Context.IntProperties[Context.BallsSpeedTypes[Variation]].Value;
-        public int Strength => Context.IntProperties[Context.BallsPowersTypes[Variation]].Value;
+        public int Speed => Context.IntProperties[Context.BallsSpeedTypes[Variation]].Instance.Value;
+        public int Strength => Context.IntProperties[Context.BallsPowersTypes[Variation]].Instance.Value;
         
         public Ball(Gameplay context, Type type, IConceptScope<Ball> scope)
         {

@@ -59,11 +59,6 @@ namespace abc.App.Game.Code.Pure
 #endif
         [OdinSerialize]
         public Dictionary<Pure.Ball.Type, IPropertyType> BallCostsTypes { get; private set; }
-        
-#if ODIN_INSPECTOR
-        [ShowInInspector, ReadOnly, TitleGroup("Model-Pure")]
-#endif
-        public Dictionary<Pure.Ball.Type, IIntProperty.Runtime> BallCostsRuntimes { get; private set; }
       
       
 #if ODIN_INSPECTOR
@@ -133,7 +128,7 @@ namespace abc.App.Game.Code.Pure
         [DisableInEditorMode]
         [HideReferenceObjectPicker]  
 #endif
-        [OdinSerialize] public Dictionary<IPropertyType, IIntProperty> IntProperties { get; internal set; }
+        [OdinSerialize] public Dictionary<IPropertyType, IIntProperty.Runtime> IntProperties { get; internal set; }
         
         internal void Validate()
         {
