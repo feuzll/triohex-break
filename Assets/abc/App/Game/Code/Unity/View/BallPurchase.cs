@@ -21,7 +21,7 @@ namespace abc.App.Game.Code.Unity.View
         public Ball.Type BallType { get; private set; }
         
         [SerializeField] private TMPro.TextMeshProUGUI costIndicator;
-        [SerializeField] private GameplayMB gameBind;
+        [ReadOnly] [ShowInInspector] private GameplayMB gameBind;
         
         private void Start()
         {
