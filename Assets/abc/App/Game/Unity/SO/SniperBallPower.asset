@@ -38,10 +38,10 @@ MonoBehaviour:
       Data: -1
     - Name: BaseCostPerStep
       Entry: 3
-      Data: 250
+      Data: 8000
     - Name: CostPreStepMultiplier
       Entry: 4
-      Data: 1.65
+      Data: 1.35
     - Name: CostResourceType
       Entry: 3
       Data: 0

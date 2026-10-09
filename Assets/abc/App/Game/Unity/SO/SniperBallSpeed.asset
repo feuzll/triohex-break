@@ -32,16 +32,16 @@ MonoBehaviour:
       Data: 1
     - Name: StartingValue
       Entry: 3
-      Data: 2
+      Data: 4
     - Name: MaxStep
       Entry: 3
       Data: 10
     - Name: BaseCostPerStep
       Entry: 3
-      Data: 250
+      Data: 7500
     - Name: CostPreStepMultiplier
       Entry: 4
-      Data: 1.65
+      Data: 1.75
     - Name: CostResourceType
       Entry: 3
       Data: 0

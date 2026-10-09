@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: runtimeTemplate
       Entry: 7
-      Data: 0|abc.App.Game.Code.Pure.Upgrades.Incremental, PureCore
+      Data: 0|abc.App.Game.Code.Pure.UpgradableInt.Incremental, PureCore
     - Name: Step
       Entry: 3
       Data: 0
@@ -38,10 +38,10 @@ MonoBehaviour:
       Data: 10
     - Name: BaseCostPerStep
       Entry: 3
-      Data: 250
+      Data: 120000
     - Name: CostPreStepMultiplier
       Entry: 4
-      Data: 1.65
+      Data: 1.5
     - Name: CostResourceType
       Entry: 3
       Data: 0
