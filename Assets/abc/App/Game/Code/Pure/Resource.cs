@@ -11,7 +11,6 @@ namespace abc.App.Game.Code.Pure
     {
         private readonly Gameplay _context;
         private readonly Resource.Type _type;
-        private int _amount;
 
 #if ODIN_INSPECTOR
         [ShowInInspector] [ReadOnly]
@@ -21,14 +20,22 @@ namespace abc.App.Game.Code.Pure
 
         public Resource(Gameplay context, Resource.Type type, int amount = 0)
         {
-            if (amount <= 0)
-                amount = 0;
-            
             _context = context;
             _type = type;
-            AmountProperty.Value = amount;
+            
             
             context.Resources.Add(type, this);
+
+            if (amount < 0) amount = 0;
+            AmountProperty.Value = amount;
+            
+            //handle prestige
+            context.Level.Subscribe(level =>
+            {
+                if (level != 1) return;
+                if (_type != Type.Basic) return;
+                AmountProperty.Value = context.StartingResources[_type];
+            });
         }
     }
 }

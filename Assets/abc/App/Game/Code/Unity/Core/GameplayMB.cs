@@ -180,7 +180,8 @@ namespace abc.App.Game.Code.Unity.Core
             {
                 if (State.PendingPrestigePoints.CurrentValue <= 0) return;
                 State.Resources[Resource.Type.Prestige].AmountProperty.Value += 
-                    State.PendingPrestigePoints.CurrentValue; 
+                    State.PendingPrestigePoints.CurrentValue;
+                foreach (var ballMB in Balls) Destroy(ballMB.gameObject);
                 State.levelProperty.Value = 1;
             });
 

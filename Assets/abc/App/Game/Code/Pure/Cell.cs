@@ -33,7 +33,14 @@ namespace abc.App.Game.Code.Pure
             
             context.RuntimePureCells.Add(this);
 
-            Broke.Skip(1).Subscribe(_ => context.BreaksToNextLevel.Value--);
+            Broke.Skip(1).Subscribe(_ =>
+            {
+                //guard possible prestige at any moment
+                if (context.FieldSchemesCycle[
+                        (context.Level.CurrentValue-1)%context.FieldSchemesCycle.Count]
+                    .CellsAsObstacles.Contains(this))
+                    context.BreaksToNextLevel.Value--;
+            });
 
             if (activeOnCreation) HealthProperty.Value = context.Level.CurrentValue;
             

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using abc.App.Game.Code.Pure.UpgradableInt;
+using R3;
 using Sirenix.Serialization;
 
 namespace abc.App.Game.Code.Pure

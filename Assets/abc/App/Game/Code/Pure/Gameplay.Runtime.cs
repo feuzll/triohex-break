@@ -38,7 +38,10 @@ namespace abc.App.Game.Code.Pure
                 Context.FieldSchemesCycle = new();
                 Context.Level.Skip(1).Subscribe(level =>
                 {
-                    if (level == 1) Context.pendingPrestigePointsProperty.Value = 0;
+                    if (level == 1)
+                    {
+                        Context.pendingPrestigePointsProperty.Value = 0;
+                    }
                     else if (level % 10 == 1) Context.pendingPrestigePointsProperty.Value++;
                     var schemesCycleSize = Context.FieldSchemesCycle.Count;
                     Context.BreaksToNextLevel.Value =
@@ -46,8 +49,8 @@ namespace abc.App.Game.Code.Pure
                 });
                 
                 
-                foreach (var (resourceType, amount) in Context.StartingResources)
-                    new Resource(Context, resourceType, amount);
+                foreach (var (resourceType, loadAmount) in Context.StartingResources)
+                    new Resource(Context, resourceType, loadAmount);
                 
             }
         }

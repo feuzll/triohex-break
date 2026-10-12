@@ -52,7 +52,7 @@ namespace abc.App.Game.Code.Pure
         [TitleGroup("Model-Pure")]
 #endif
         [OdinSerialize]
-        protected Dictionary<Pure.Resource.Type, int> StartingResources { get; private set; }
+        internal Dictionary<Pure.Resource.Type, int> StartingResources { get; private set; }
         
 #if ODIN_INSPECTOR
         [TitleGroup("Model-Pure")]

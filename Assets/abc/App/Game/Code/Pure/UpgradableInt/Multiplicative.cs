@@ -1,4 +1,5 @@
 ﻿using System;
+using R3;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
@@ -77,6 +78,15 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
                     instance.Step = instance.MaxStep;
                 
                 instance.Step = 0;
+                
+                gameplayRuntime.Context.Level.Subscribe(level =>
+                {
+                    if (level != 1) return;
+                    if (type == gameplayRuntime.Context.AnyBallPowerMultiplicatorType 
+                        || type == gameplayRuntime.Context.AnyBallAcceleratorType)
+                        return;
+                    instance.Step = 0;
+                });
             }
             
             internal bool TryBuyNextStep()
