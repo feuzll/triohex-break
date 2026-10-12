@@ -11,8 +11,10 @@ namespace abc.App.Game.Code.Pure
         internal readonly Gameplay Context;
         public readonly Type Variation;
 
-        public int Speed => Context.IntProperties[Context.BallsSpeedTypes[Variation]].Instance.Value;
-        public int Strength => Context.IntProperties[Context.BallsPowersTypes[Variation]].Instance.Value;
+        public int Speed => Context.IntProperties[Context.BallsSpeedTypes[Variation]].Instance.Value 
+                            * Context.IntProperties[Context.AnyBallAcceleratorType].Instance.Value;
+        public int Strength => Context.IntProperties[Context.BallsPowersTypes[Variation]].Instance.Value 
+                               * Context.IntProperties[Context.AnyBallPowerMultiplicatorType].Instance.Value;
         
         public Ball(Gameplay context, Type type, IConceptScope<Ball> scope)
         {

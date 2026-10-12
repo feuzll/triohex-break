@@ -37,20 +37,42 @@ namespace abc.App.Game.Code.Unity.View
 
         private void Start()
         {
-            var incrementalCost = gameBind.State
-                .IntProperties[PropertyType].Instance as Incremental;
-            costIndicator.text = incrementalCost.NextStepCost.ToString();
-            incrementalCost.NewStep +=
-                step =>
-                {
-                    costIndicator.text = incrementalCost.NextStepCost.ToString();
-                };
-
-            gameBind.State.Resources[incrementalCost.CostResourceType]
-                .Amount.Subscribe(rAmount =>
+            if (gameBind.State
+                    .IntProperties[PropertyType].Instance is Incremental)
             {
-                costIndicator.color = rAmount >= incrementalCost.NextStepCost ? initialColor : dimColor;
-            });
+                var incrementalCost = gameBind.State
+                    .IntProperties[PropertyType].Instance as Incremental;
+                costIndicator.text = incrementalCost.NextStepCost.ToString();
+                incrementalCost.NewStep +=
+                    step =>
+                    {
+                        costIndicator.text = incrementalCost.NextStepCost.ToString();
+                    };
+
+                gameBind.State.Resources[incrementalCost.CostResourceType]
+                    .Amount.Subscribe(rAmount =>
+                {
+                    costIndicator.color = rAmount >= incrementalCost.NextStepCost ? initialColor : dimColor;
+                });
+            }
+            else if (gameBind.State
+                         .IntProperties[PropertyType].Instance is Multiplicative)
+            {
+                var incrementalCost = gameBind.State
+                    .IntProperties[PropertyType].Instance as Multiplicative;
+                costIndicator.text = incrementalCost.NextStepCost.ToString();
+                incrementalCost.NewStep +=
+                    step =>
+                    {
+                        costIndicator.text = incrementalCost.NextStepCost.ToString();
+                    };
+
+                gameBind.State.Resources[incrementalCost.CostResourceType]
+                    .Amount.Subscribe(rAmount =>
+                    {
+                        costIndicator.color = rAmount >= incrementalCost.NextStepCost ? initialColor : dimColor;
+                    });
+            }
         }
     }
 }
