@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff9ee1fc798a49c992f74687154b81b2, type: 3}
-  m_Name: PosionBallPower
-  m_EditorClassIdentifier: UnityCore::abc.App.Game.Code.Unity.Core.IncrementalUpgradeType
+  m_Name: AnyBallSpeedMultiplicator
+  m_EditorClassIdentifier: UnityCore::abc.App.Game.Code.Unity.Core.UpgradableInt.IncrementalType
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -35,16 +35,16 @@ MonoBehaviour:
       Data: 1
     - Name: MaxStep
       Entry: 3
-      Data: 10
+      Data: 0
     - Name: BaseCostPerStep
       Entry: 3
-      Data: 50000
+      Data: 5
     - Name: CostPreStepMultiplier
       Entry: 4
-      Data: 1.2
+      Data: 2
     - Name: CostResourceType
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 8
       Data: 

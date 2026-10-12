@@ -1,10 +1,10 @@
 ﻿using System;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
 using Math =
 #if UNITY_5_3_OR_NEWER
     UnityEngine.Mathf;
+using UnityEngine;
 #else
     System.Math;
 #endif
@@ -81,7 +81,7 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
             
             internal bool TryBuyNextStep()
             {
-                Debug.Log("trying to buy next step");
+                //Debug.Log("trying to buy next step");
                 var Instance = this.Instance as Incremental;
                 //guard
                 if (Instance.MaxStep > 0 && Instance.Step >= Instance.MaxStep )
@@ -95,7 +95,7 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
                 //actual buy
                 requiredResource.AmountProperty.Value -= nextStepCost;
                 Instance.Step++;
-                Debug.Log("successfully bought next step");
+                //Debug.Log("successfully bought next step");
                 return true;
             }
             

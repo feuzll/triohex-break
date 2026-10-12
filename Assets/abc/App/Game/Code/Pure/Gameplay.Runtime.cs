@@ -38,6 +38,7 @@ namespace abc.App.Game.Code.Pure
                 Context.FieldSchemesCycle = new();
                 Context.Level.Skip(1).Subscribe(level =>
                 {
+                    if (level % 10 == 1) Context.pendingPrestigePointsProperty.Value++;
                     var schemesCycleSize = Context.FieldSchemesCycle.Count;
                     Context.BreaksToNextLevel.Value =
                         Context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;

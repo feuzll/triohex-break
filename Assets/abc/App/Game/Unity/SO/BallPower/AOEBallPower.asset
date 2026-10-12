@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff9ee1fc798a49c992f74687154b81b2, type: 3}
-  m_Name: SplitterBallPower
+  m_Name: AOEBallPower
   m_EditorClassIdentifier: UnityCore::abc.App.Game.Code.Unity.Core.IncrementalUpgradeType
   serializationData:
     SerializedFormat: 2
@@ -29,19 +29,19 @@ MonoBehaviour:
       Data: 0
     - Name: StepIncrement
       Entry: 3
-      Data: 5
+      Data: 3
     - Name: StartingValue
       Entry: 3
-      Data: 5
+      Data: 3
     - Name: MaxStep
       Entry: 3
-      Data: -1
+      Data: 10
     - Name: BaseCostPerStep
       Entry: 3
-      Data: 100000
+      Data: 1250
     - Name: CostPreStepMultiplier
       Entry: 4
-      Data: 1.3
+      Data: 1.5
     - Name: CostResourceType
       Entry: 3
       Data: 0

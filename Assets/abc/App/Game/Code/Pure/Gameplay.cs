@@ -109,6 +109,15 @@ namespace abc.App.Game.Code.Pure
 #endif
         internal ReactiveProperty<int> BreaksToNextLevel => breaksToNextLevelProperty;
         
+        
+#if UNITY_5_3_OR_NEWER
+        [DisableInPlayMode] [InlineProperty] [ReadOnly]
+        [SerializeField] internal SerializableReactiveProperty<int> pendingPrestigePointsProperty;
+#else
+        internal ReactiveProperty<int> pendingPrestigePointsProperty { get; set; }
+#endif
+        public ReactiveProperty<int> PendingPrestigePoints => pendingPrestigePointsProperty;
+        
         protected Observable<Unit> BrokeAllFieldCells { get; private set; }
         
         public Observable<float> Tick { get; internal set; }

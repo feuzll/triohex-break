@@ -2,6 +2,7 @@
 using abc.App.Game.Code.Pure;
 using abc.App.Game.Code.Pure.UpgradableInt;
 using abc.App.Game.Code.Unity.Core;
+using R3;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,15 @@ namespace abc.App.Game.Code.Unity.View
         [InfoBox("For manual set (view-observer role)")]
         [SerializeField] private GameplayMB gameBind;
         
+        private Color initialColor;
+        private Color dimColor;
+        
+        private void Awake()
+        {
+            initialColor = costIndicator.color;
+            dimColor = initialColor * 0.5f;
+        }
+        
         private void Start()
         {
             var incrementalCost = gameBind.State
@@ -34,6 +44,12 @@ namespace abc.App.Game.Code.Unity.View
                 {
                     costIndicator.text = incrementalCost.NextStepCost.ToString();
                 };
+            
+            gameBind.State.Resources[incrementalCost.CostResourceType]
+                .Amount.Subscribe(rAmount =>
+                {
+                    costIndicator.color = rAmount >= incrementalCost.NextStepCost ? initialColor : dimColor;
+                });
         }
     }
 }

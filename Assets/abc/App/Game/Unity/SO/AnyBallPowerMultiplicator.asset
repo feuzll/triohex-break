@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff9ee1fc798a49c992f74687154b81b2, type: 3}
-  m_Name: AOEBallPower
-  m_EditorClassIdentifier: UnityCore::abc.App.Game.Code.Unity.Core.IncrementalUpgradeType
+  m_Script: {fileID: 11500000, guid: 443edd199df04c2a8f7395249da1709d, type: 3}
+  m_Name: AnyBallPowerMultiplicator
+  m_EditorClassIdentifier: UnityCore::abc.App.Game.Code.Unity.Core.UpgradableInt.MultiplicativeType
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -23,28 +23,28 @@ MonoBehaviour:
     SerializationNodes:
     - Name: runtimeTemplate
       Entry: 7
-      Data: 0|abc.App.Game.Code.Pure.UpgradableInt.Incremental, PureCore
+      Data: 0|abc.App.Game.Code.Pure.UpgradableInt.Multiplicative, PureCore
     - Name: Step
       Entry: 3
       Data: 0
-    - Name: StepIncrement
+    - Name: StepMultiplicator
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: StartingValue
       Entry: 3
       Data: 1
     - Name: MaxStep
       Entry: 3
-      Data: 10
+      Data: -1
     - Name: BaseCostPerStep
       Entry: 3
-      Data: 1250
+      Data: 5
     - Name: CostPreStepMultiplier
       Entry: 4
-      Data: 1.5
+      Data: 2
     - Name: CostResourceType
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
