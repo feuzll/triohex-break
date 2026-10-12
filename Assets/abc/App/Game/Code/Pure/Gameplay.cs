@@ -82,7 +82,14 @@ namespace abc.App.Game.Code.Pure
         public float BallsJitter { get; private set; } = 30;
         
         [OdinSerialize]
-        public IPropertyType AOEBallRangeType { get; private set; } 
+        public IPropertyType AOEBallRangeType { get; private set; }
+        
+        [OdinSerialize]
+        public IPropertyType AnyBallAcceleratorType { get; private set; }
+        
+        [OdinSerialize]
+        public IPropertyType AnyBallPowerMultiplicatorType { get; private set; }
+        
         
         [OdinSerialize]
         public IPropertyType SplitterBallDivideCountType { get; private set; }

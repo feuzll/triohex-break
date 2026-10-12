@@ -9,6 +9,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 namespace abc.App.Game.Code.Unity.Core
 {
@@ -46,6 +47,8 @@ namespace abc.App.Game.Code.Unity.Core
         [SerializeField] private HashSet<UpgradableInt.IPurchase> _upgradeSources;
         [SerializeField] private HashSet<IBallPurchase> _ballPurchaseSources;
         [SerializeField] private ObjectPool<BallMB> _oneHitBallsPool;
+        [SerializeField] private Button prestigeButton;
+        
         
         private Vector2 newOneHitBallVelocity = Vector2.up;
         private Vector2 newOneHitBallPosition = Vector2.zero;
@@ -147,6 +150,14 @@ namespace abc.App.Game.Code.Unity.Core
                 }
             }
 
+            new Multiplicative.Runtime(_runtime,
+                Instantiate((MultiplicativeType)State.AnyBallPowerMultiplicatorType).runtimeTemplate,
+                State.AnyBallPowerMultiplicatorType);
+            
+            new Incremental.Runtime(_runtime,
+                Instantiate(((IncrementalType)State.AnyBallAcceleratorType)).runtimeTemplate,
+                State.AnyBallAcceleratorType);
+            
             new Incremental.Runtime(_runtime,
                 Instantiate(((IncrementalType)State.AOEBallRangeType)).runtimeTemplate,
                 State.AOEBallRangeType); 
@@ -165,7 +176,13 @@ namespace abc.App.Game.Code.Unity.Core
                     Instantiate((IncrementalType)ballUpgradeType)
                         .runtimeTemplate, ballUpgradeType);
             
-            
+            prestigeButton.onClick.AddListener(() =>
+            {
+                if (State.PendingPrestigePoints.CurrentValue <= 0) return;
+                State.Resources[Resource.Type.Prestige].AmountProperty.Value += 
+                    State.PendingPrestigePoints.CurrentValue; 
+                State.levelProperty.Value = 1;
+            });
 
             this.State.Tick.Subscribe(_ =>
                 State.PointerPosition =
