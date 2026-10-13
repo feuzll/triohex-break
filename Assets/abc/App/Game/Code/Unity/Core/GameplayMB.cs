@@ -224,8 +224,9 @@ namespace abc.App.Game.Code.Unity.Core
             {
                 n = Physics2D.OverlapCircle(a, State.Slice.BladeRadius,
                     CellSearchFilter, SliceOverlaps);
+                var overlaps = SliceOverlaps.Take(n);
                 return MonoFieldCells
-                    .Where(cell => SliceOverlaps.Contains(cell.Collider))
+                    .Where(cell => overlaps.Contains(cell.Collider))
                     .Select(c => c.Pure).ToArray();
             }
 
