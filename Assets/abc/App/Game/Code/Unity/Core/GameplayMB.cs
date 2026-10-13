@@ -48,7 +48,9 @@ namespace abc.App.Game.Code.Unity.Core
         [SerializeField] private HashSet<IBallPurchase> _ballPurchaseSources;
         [SerializeField] private ObjectPool<BallMB> _oneHitBallsPool;
         [SerializeField] private Button prestigeButton;
-        
+
+        [SerializeField] internal Sprite basicCellSprite;
+        [SerializeField] internal Sprite armoredCellSprite;
         
         private Vector2 newOneHitBallVelocity = Vector2.up;
         private Vector2 newOneHitBallPosition = Vector2.zero;

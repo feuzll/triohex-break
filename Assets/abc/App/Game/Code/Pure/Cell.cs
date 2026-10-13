@@ -1,6 +1,15 @@
 ﻿using System;
+using System.Linq;
 using abc.App.Game.Code.Pure.Interaction;
 using R3;
+using Math =
+#if UNITY_5_3_OR_NEWER
+    UnityEngine.Mathf;
+using UnityEngine;
+#else
+    System.Math;
+#endif
+
 namespace abc.App.Game.Code.Pure
 {
     public partial class Cell
@@ -18,13 +27,17 @@ namespace abc.App.Game.Code.Pure
 
         private bool IsPoisoned = false;
         
+        internal readonly ReactiveProperty<bool> IsArmoredProperty = 
+            new ReactiveProperty<bool>(false);
+        public ReadOnlyReactiveProperty<bool> IsArmored => IsArmoredProperty;
+        
         public Cell(Gameplay context, Type type, IConceptScope<Cell> scope, bool activeOnCreation)
         {
             Scope = null;
             
             _context = context;
             Variation = type;
-
+            
             Broke = Health.Select(h => h <= 0)
                 .DistinctUntilChanged()
                 .Where(broke => broke)
@@ -35,6 +48,8 @@ namespace abc.App.Game.Code.Pure
 
             Broke.Skip(1).Subscribe(_ =>
             {
+                if (IsArmoredProperty.Value) 
+                    _context.Resources[Resource.Type.SS].AmountProperty.Value++;
                 //guard possible prestige at any moment
                 if (context.FieldSchemesCycle[
                         (context.Level.CurrentValue-1)%context.FieldSchemesCycle.Count]
@@ -47,9 +62,19 @@ namespace abc.App.Game.Code.Pure
             context.Level.Skip(1).Subscribe((newLevel) =>
             {
                 IsPoisoned = false;
+                IsArmoredProperty.Value = false;
+                
                 HealthProperty.Value = context.FieldSchemesCycle[
                         (newLevel-1)%context.FieldSchemesCycle.Count]
                     .CellsAsObstacles.Contains(this) ? newLevel : 0;
+
+                var requiredArmoredCells = Math.Max(0, newLevel - 100) % 500;
+                var schemeCells = context.FieldSchemesCycle[
+                    (newLevel - 1) % context.FieldSchemesCycle.Count].CellsAsObstacles.ToArray();
+                
+                for (var i = 0; i < requiredArmoredCells && i < schemeCells.Length - 1; i++) 
+                    schemeCells[i].IsArmoredProperty.Value = true;
+                
             });
 
             BallHitsCell.New.Subscribe((e) =>
@@ -58,21 +83,30 @@ namespace abc.App.Game.Code.Pure
                 if (c.cell == this && c.ball.Variation == Ball.Type.Poison)
                     IsPoisoned = true;
                 if (c.cell == this)
+                {
+                    if (IsArmored.CurrentValue && !context.OnlyArmoredRemained) return;
                     ReceiveDamage(c.ball.Strength);
+                }
             });
             
             SliceHitsCell.New.Subscribe((e) =>
             {
                 (Slice slice, Cell cell) info = e;
                 if (info.cell == this)
+                {
+                    if (IsArmored.CurrentValue && !context.OnlyArmoredRemained) return;
                     ReceiveDamage(info.slice.Strength);
+                }
             });
 
             BallAOEOverlapsCell.New.Subscribe((e) =>
             {
                 (Gameplay ctx, Cell cell, int damage) c = e;
                 if (c.cell == this)
+                {
+                    if (IsArmored.CurrentValue && !context.OnlyArmoredRemained) return;
                     ReceiveDamage(c.damage);
+                }
             });
             
             ObserveScopeClear(scope);

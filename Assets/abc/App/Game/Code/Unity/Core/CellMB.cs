@@ -8,11 +8,15 @@ using UnityEngine;
 
 namespace abc.App.Game.Code.Unity.Core
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Collider2D))]
     public class CellMB : MonoBind<Pure.Cell>
     {
         internal Collider2D Collider => _collider ??= GetComponent<Collider2D>();
         private Collider2D _collider;
+        
+        internal SpriteRenderer SpriteRenderer => _spriteRenderer ??= GetComponent<SpriteRenderer>();
+        private SpriteRenderer _spriteRenderer;
         
         [ShowInInspector] [OdinSerialize]
         public Pure.Cell.Type Variation
@@ -77,6 +81,12 @@ namespace abc.App.Game.Code.Unity.Core
             {
                 gameObject.SetActive(Pure.Health.CurrentValue > 0);
             }).AddTo(_tails);
+
+            Pure?.IsArmored.Subscribe(isArmored =>
+            {
+                SpriteRenderer.sprite = isArmored ?
+                    ContextBind.armoredCellSprite : ContextBind.basicCellSprite;
+            });
         }
 
         protected override void ClearBinds()

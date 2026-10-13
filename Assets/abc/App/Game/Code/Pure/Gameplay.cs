@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using abc.App.Game.Code.Pure.UpgradableInt;
 using ObservableCollections;
 using R3;
@@ -41,6 +42,19 @@ namespace abc.App.Game.Code.Pure
         
         //TODO: fill it via static Cell.New<GameplayRuntime> event
         public ObservableHashSet<Cell> RuntimePureCells { get; private set; }
+
+        public bool OnlyArmoredRemained
+        {
+            get
+            {
+                var schemesCycleSize = FieldSchemesCycle.Count;
+                var levelCells = FieldSchemesCycle
+                    [(Level.CurrentValue-1)%schemesCycleSize].CellsAsObstacles;
+                return levelCells
+                    .Where(c => c.Health.CurrentValue > 0)
+                    .All(c => c.IsArmored.CurrentValue);
+            }
+        }
         
         [OdinSerialize] public Slice Slice { get; internal set; }
         [OdinSerialize] public Slice.Mana Mana { get; internal set; }
@@ -95,7 +109,7 @@ namespace abc.App.Game.Code.Pure
         public IPropertyType SplitterBallDivideCountType { get; private set; }
         
 #if UNITY_5_3_OR_NEWER
-        [DisableInPlayMode] [InlineProperty]
+        [InlineProperty]
         [SerializeField] internal SerializableReactiveProperty<int> levelProperty;
 #else
         internal ReactiveProperty<int> levelProperty { get; set; }

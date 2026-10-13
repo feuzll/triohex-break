@@ -363160,7 +363160,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -123.1, y: -788.99}
+  m_AnchoredPosition: {x: -123.1001, y: -788.99}
   m_SizeDelta: {x: 96.4713, y: 72.5348}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208568207
@@ -409865,7 +409865,7 @@ MonoBehaviour:
       Data: 2
     - Name: $v
       Entry: 3
-      Data: 20
+      Data: 512
     - Name: 
       Entry: 8
       Data: 
@@ -412603,6 +412603,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1048576
   prestigeButton: {fileID: 150190719}
+  basicCellSprite: {fileID: 21300000, guid: dca2a5cde91db8f46ad05708525a7c9c, type: 3}
+  armoredCellSprite: {fileID: 21300000, guid: e8f428b9dcc44aa4cb1eb288ecd65fb5, type: 3}
 --- !u!1 &1365948359
 GameObject:
   m_ObjectHideFlags: 0
