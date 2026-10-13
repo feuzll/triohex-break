@@ -62,7 +62,6 @@ namespace abc.App.Game.Code.Pure
             context.Level.Skip(1).Subscribe((newLevel) =>
             {
                 IsPoisoned = false;
-                IsArmoredProperty.Value = false;
                 
                 HealthProperty.Value = context.FieldSchemesCycle[
                         (newLevel-1)%context.FieldSchemesCycle.Count]

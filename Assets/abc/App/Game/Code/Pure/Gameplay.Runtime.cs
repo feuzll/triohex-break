@@ -46,6 +46,9 @@ namespace abc.App.Game.Code.Pure
                     var schemesCycleSize = Context.FieldSchemesCycle.Count;
                     Context.BreaksToNextLevel.Value =
                         Context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;
+
+                    foreach (var pureCell in Context.RuntimePureCells) 
+                        pureCell.IsArmoredProperty.Value = false;
                     
                     var requiredArmoredCells = Math.Max(0, level - 100) % 500;
                     var schemeCells = context.FieldSchemesCycle[
