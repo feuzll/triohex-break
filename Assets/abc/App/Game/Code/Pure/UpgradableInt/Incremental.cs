@@ -47,8 +47,14 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
             }
         }
 
+        public bool IsMaxed => (MaxStep > 0 && Step > MaxStep);
+
         public event Action<int> NewStep;
-        
+        void IUpgradableInt.AdvanceStep()
+        {
+            Step++;
+        }
+
         [OdinSerialize] public int StepIncrement { get; protected set; }
         [OdinSerialize] public int StartingValue { get; protected set; }
         [OdinSerialize] public int MaxStep { get; protected set; }
@@ -88,27 +94,6 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
                     instance.Step = 0;
                 });
             }
-            
-            internal bool TryBuyNextStep()
-            {
-                //Debug.Log("trying to buy next step");
-                var Instance = this.Instance as Incremental;
-                //guard
-                if (Instance.MaxStep > 0 && Instance.Step >= Instance.MaxStep )
-                    return false;
-                var requiredResource = 
-                    Instance._gameplayRuntime.Context.Resources[Instance.CostResourceType];
-                var nextStepCost = Instance.NextStepCost;
-                if (requiredResource.Amount.CurrentValue < nextStepCost)
-                    return false;
-                
-                //actual buy
-                requiredResource.AmountProperty.Value -= nextStepCost;
-                Instance.Step++;
-                //Debug.Log("successfully bought next step");
-                return true;
-            }
-            
         }
         
     }

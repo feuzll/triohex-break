@@ -18,6 +18,13 @@ namespace abc.App.Game.Code.Pure
         internal ReactiveProperty<int> AmountProperty { get; set; } = new(); 
         public ReadOnlyReactiveProperty<int> Amount => AmountProperty;
 
+        internal bool TrySpend(int required)
+        {
+            if (required > Amount.CurrentValue) return false;
+            AmountProperty.Value -= required;
+            return true;
+        }
+        
         public Resource(Gameplay context, Resource.Type type, int amount = 0)
         {
             _context = context;

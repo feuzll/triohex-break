@@ -6,9 +6,11 @@ namespace abc.App.Game.Code.Pure.Interaction
     {
         internal static bool Try(Gameplay context, IPropertyType type)
         {
-            if (context.IntProperties[type] is Incremental.Runtime)
-                return ((Incremental.Runtime)context.IntProperties[type]).TryBuyNextStep();
-            else return ((Multiplicative.Runtime)context.IntProperties[type]).TryBuyNextStep();
+            var upgradableInt = (IUpgradableInt)context.IntProperties[type].Instance;
+            if (upgradableInt.IsMaxed) return false;
+            if (!context.Resources[upgradableInt.CostResourceType].TrySpend(upgradableInt.NextStepCost)) return false;
+            upgradableInt.AdvanceStep();
+            return true;
         }
     }
 }

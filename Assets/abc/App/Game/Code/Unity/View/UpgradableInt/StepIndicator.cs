@@ -16,7 +16,7 @@ namespace abc.App.Game.Code.Unity.View.UpgradableInt
         
         private void Start()
         {
-            var incremental = gameBind.State.IntProperties[PropertyType].Instance as Incremental;
+            var incremental = gameBind.State.IntProperties[PropertyType].Instance as IUpgradableInt;
             stepIndicator.text = "x" + incremental.Step.ToString();
             incremental.NewStep += step =>
             {

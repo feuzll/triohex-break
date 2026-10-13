@@ -11,9 +11,7 @@ namespace abc.App.Game.Code.Pure.Interaction
             if (provideScopeCallback == null)
                 throw new ArgumentNullException(nameof(provideScopeCallback));
             
-            var basicResource = context.Resources[Resource.Type.Basic];
-            if (((Incremental.Runtime)context
-                    .IntProperties[context.BallCostsTypes[type]]).TryBuyNextStep() == false)
+            if (UpgradeIntProperty.Try(context, context.BallCostsTypes[type]) == false)
             {
                 ball = null;
                 return false;

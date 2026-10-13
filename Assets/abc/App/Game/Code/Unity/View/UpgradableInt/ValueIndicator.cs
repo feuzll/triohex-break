@@ -19,8 +19,7 @@ namespace abc.App.Game.Code.Unity.View.UpgradableInt
         
         private void Start()
         {
-            if (gameBind.State.IntProperties[PropertyType].Instance is not IUpgradableInt) return;
-            var upgradableInt = gameBind.State.IntProperties[PropertyType].Instance as IUpgradableInt;
+            if (gameBind.State.IntProperties[PropertyType].Instance is not IUpgradableInt upgradableInt) return;
             valueIndicator.text = "- " + upgradableInt.Value.ToString() + " -";
             upgradableInt.NewStep += _ =>
             {
