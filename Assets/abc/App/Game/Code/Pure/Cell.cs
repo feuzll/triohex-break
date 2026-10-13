@@ -67,14 +67,6 @@ namespace abc.App.Game.Code.Pure
                 HealthProperty.Value = context.FieldSchemesCycle[
                         (newLevel-1)%context.FieldSchemesCycle.Count]
                     .CellsAsObstacles.Contains(this) ? newLevel : 0;
-
-                var requiredArmoredCells = Math.Max(0, newLevel - 100) % 500;
-                var schemeCells = context.FieldSchemesCycle[
-                    (newLevel - 1) % context.FieldSchemesCycle.Count].CellsAsObstacles.ToArray();
-                
-                for (var i = 0; i < requiredArmoredCells && i < schemeCells.Length - 1; i++) 
-                    schemeCells[i].IsArmoredProperty.Value = true;
-                
             });
 
             BallHitsCell.New.Subscribe((e) =>

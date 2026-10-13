@@ -71,8 +71,9 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
                 if (instance.StartingValue <= 0)
                     instance.StartingValue = 1;
                 
-                if (instance.MaxStep > 0 && instance.Step > instance.MaxStep)
-                    instance.Step = instance.MaxStep;
+                // possible future persistence guard
+                // if (instance.MaxStep > 0 && instance.Step > instance.MaxStep)
+                //     instance.Step = instance.MaxStep;
                 
                 instance.Step = 0;
                 

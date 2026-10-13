@@ -46,6 +46,13 @@ namespace abc.App.Game.Code.Pure
                     var schemesCycleSize = Context.FieldSchemesCycle.Count;
                     Context.BreaksToNextLevel.Value =
                         Context.FieldSchemesCycle[(level-1)%schemesCycleSize].CellsAsObstacles.Count;
+                    
+                    var requiredArmoredCells = Math.Max(0, level - 100) % 500;
+                    var schemeCells = context.FieldSchemesCycle[
+                        (level - 1) % context.FieldSchemesCycle.Count].CellsAsObstacles.ToArray();
+                
+                    for (var i = 0; i < requiredArmoredCells && i < schemeCells.Length - 1; i++) 
+                        schemeCells[i].IsArmoredProperty.Value = true;
                 });
                 
                 

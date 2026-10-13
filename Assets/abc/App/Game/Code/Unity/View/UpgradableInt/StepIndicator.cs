@@ -1,4 +1,5 @@
-﻿using abc.App.Game.Code.Pure.UpgradableInt;
+﻿using System;
+using abc.App.Game.Code.Pure.UpgradableInt;
 using abc.App.Game.Code.Unity.Core;
 using abc.App.Game.Code.Unity.Core.UpgradableInt;
 using Sirenix.OdinInspector;
@@ -14,14 +15,26 @@ namespace abc.App.Game.Code.Unity.View.UpgradableInt
         [SerializeField] private TMPro.TextMeshProUGUI stepIndicator;
         [SerializeField] private GameplayMB gameBind;
         
+        private IUpgradableInt _upgradableInt;
+        
         private void Start()
         {
-            var incremental = gameBind.State.IntProperties[PropertyType].Instance as IUpgradableInt;
-            stepIndicator.text = "x" + incremental.Step.ToString();
-            incremental.NewStep += step =>
-            {
-                stepIndicator.text = "x" + step.ToString();
-            };
+            if (gameBind.State.IntProperties[PropertyType].Instance is not IUpgradableInt incremental)
+                return;
+            _upgradableInt =  incremental;
+            Redraw(_upgradableInt.Value);
+            _upgradableInt.NewStep += Redraw;
+        }
+
+        private void OnDestroy()
+        {
+            _upgradableInt.NewStep -= Redraw;
+        }
+
+
+        private void Redraw(int newValue)
+        {
+            stepIndicator.text = "x" + newValue;
         }
     }
 }

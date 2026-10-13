@@ -36,8 +36,10 @@ namespace abc.App.Game.Code.Unity.View
         
         private void Start()
         {
-            var incrementalCost = gameBind.State
-                .IntProperties[gameBind.State.BallCostsTypes[BallType]].Instance as IUpgradableInt;
+            if (gameBind.State.IntProperties
+                    [gameBind.State.BallCostsTypes[BallType]]
+                    .Instance is not IUpgradableInt incrementalCost)
+                return;
             costIndicator.text = incrementalCost.NextStepCost.ToString();
             incrementalCost.NewStep +=
                 step =>
