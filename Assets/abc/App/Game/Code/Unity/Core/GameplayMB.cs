@@ -52,8 +52,6 @@ namespace abc.App.Game.Code.Unity.Core
         [SerializeField] internal Sprite basicCellSprite;
         [SerializeField] internal Sprite armoredCellSprite;
         
-        private Vector2 newOneHitBallVelocity = Vector2.up;
-        private Vector2 newOneHitBallPosition = Vector2.zero;
         
         private void Awake()
         {
@@ -108,13 +106,7 @@ namespace abc.App.Game.Code.Unity.Core
                     }).AddTo(newBallBind);
                     return newBallBind;
                 },
-                actionOnGet: mb =>
-                {
-                    mb.BindToCombo(this,
-                        new Ball(State, Ball.Type.OneHit, mb),
-                        newOneHitBallVelocity, newOneHitBallPosition);
-                    mb.gameObject.SetActive(true);
-                },
+                actionOnGet: null,
                 actionOnRelease: mb =>
                 {
                     mb.ContextBind = null;
@@ -129,14 +121,19 @@ namespace abc.App.Game.Code.Unity.Core
             
             Pure.Interaction.SplitterBallHitsWall.New.Subscribe(info =>
             {
+                if (info.Item1 != State) return;
                 for (var i = 0; i < State.IntProperties[State.SplitterBallDivideCountType].Instance.Value; i++)
                 {
-                    var parentSplitterBall = Balls.First(x => x.Pure == info.Item2); 
-                    newOneHitBallVelocity = parentSplitterBall.PhysicsBody.linearVelocity;
-                    newOneHitBallPosition = parentSplitterBall.transform.position;
+                    var parentSplitterBall = (BallMB)info.Item2.Scope; 
+                    var newOneHitBallVelocity = parentSplitterBall.PhysicsBody.linearVelocity;
+                    var newOneHitBallPosition = parentSplitterBall.transform.position;
                     var newOneHitBallScope = _oneHitBallsPool.Get();
+                    newOneHitBallScope.BindToCombo(this,
+                        new Ball(State, Ball.Type.OneHit, newOneHitBallScope),
+                        newOneHitBallVelocity, newOneHitBallPosition);
+                    newOneHitBallScope.gameObject.SetActive(true);
                 }
-            });
+            }).AddTo(this);
             
             foreach (var (ballType,ballUpgradeType) in State.BallsSpeedTypes)
             {
@@ -240,7 +237,7 @@ namespace abc.App.Game.Code.Unity.Core
             //Debug.Log($"slice hit count: {n}");
             
             var hitColliders = 
-                SliceHits.Select(h => h.collider); 
+                SliceHits.Take(n).Select(h => h.collider); 
                 
             return MonoFieldCells.Where(cell => 
                 hitColliders.Contains(cell.Collider))

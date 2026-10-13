@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace abc.App.Game.Code.Pure.UpgradableInt
 {
-    public class Multiplicative : IIntProperty
+    public class Multiplicative : IUpgradableInt
     {
         private Multiplicative.Runtime _runtime;
         private Gameplay.Runtime _gameplayRuntime;
@@ -30,7 +30,7 @@ namespace abc.App.Game.Code.Pure.UpgradableInt
 #endif
         public int NextStepCost =>
             (int)(BaseCostPerStep *
-                  Mathf.Pow(CostPreStepMultiplier, Step));
+                  Math.Pow(CostPreStepMultiplier, Step));
         
 
         private int _step; // save target

@@ -13,7 +13,7 @@ using UnityEngine;
 namespace abc.App.Game.Code.Pure.UpgradableInt
 {
     [Serializable]
-    public class Incremental : IIntProperty
+    public class Incremental : IUpgradableInt
     {
         private Runtime _runtime;
         private Gameplay.Runtime _gameplayRuntime;

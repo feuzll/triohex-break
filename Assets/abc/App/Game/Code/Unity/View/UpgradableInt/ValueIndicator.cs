@@ -19,24 +19,13 @@ namespace abc.App.Game.Code.Unity.View.UpgradableInt
         
         private void Start()
         {
-            if (gameBind.State.IntProperties[PropertyType].Instance is Incremental)
+            if (gameBind.State.IntProperties[PropertyType].Instance is not IUpgradableInt) return;
+            var upgradableInt = gameBind.State.IntProperties[PropertyType].Instance as IUpgradableInt;
+            valueIndicator.text = "- " + upgradableInt.Value.ToString() + " -";
+            upgradableInt.NewStep += _ =>
             {
-                var incremental = gameBind.State.IntProperties[PropertyType].Instance as Incremental;
-                valueIndicator.text = "- " + incremental.Value.ToString() + " -";
-                incremental.NewStep += _ =>
-                {
-                    valueIndicator.text = "- " + incremental.Value.ToString() + " -";
-                };
-            }
-            else if (gameBind.State.IntProperties[PropertyType].Instance is Multiplicative)
-            {
-                var multiplicative = gameBind.State.IntProperties[PropertyType].Instance as Multiplicative;
-                valueIndicator.text = "- " + multiplicative.Value.ToString() + " -";
-                multiplicative.NewStep += _ =>
-                {
-                    valueIndicator.text = "- " + multiplicative.Value.ToString() + " -";
-                };
-            }
+                valueIndicator.text = "- " + upgradableInt.Value.ToString() + " -";
+            };
         }
     }
 }

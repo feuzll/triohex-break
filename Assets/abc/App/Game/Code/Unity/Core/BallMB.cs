@@ -73,14 +73,14 @@ namespace abc.App.Game.Code.Unity.Core
                 if (Pure == null) return;
                 if (ball == Pure && ball.Variation == Ball.Type.Sniper)
                     RotateToClosestCellBindOrRandomly();
-            });
+            }).AddTo(_tails);
             
             GameplayState.FieldCollision.Subscribe((ball) =>
             {
                 if (Pure == null) return;
                 if (ball == Pure && ball.Variation == Ball.Type.Splitter)
                     Code.Pure.Interaction.SplitterBallHitsWall.Raise(GameplayState, ball);
-            });
+            }).AddTo(_tails);
         }
         
         

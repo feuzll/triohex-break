@@ -66,9 +66,12 @@ namespace abc.App.Game.Code.Unity.Core
                     e.ball = c.collider.GetComponent<BallMB>().Pure;
                     return e;
                 })
-                .Subscribe(e => 
+                .Subscribe(e =>
+                {
+                    if (e.ball == null) return;
                     Code.Pure.Interaction.BallHitsCell
-                        .Raise(e.ctx, e.cell, e.ball)).AddTo(gameObject);
+                        .Raise(e.ctx, e.cell, e.ball);
+                }).AddTo(gameObject);
         }
 
         protected override void OnNewPureState()
