@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using abc.App.Game.Code.Pure.Bosses;
 using abc.App.Game.Code.Pure.UpgradableInt;
 using ObservableCollections;
 using R3;
@@ -94,6 +95,20 @@ namespace abc.App.Game.Code.Pure
 #endif
         [OdinSerialize]
         public float BallsJitter { get; private set; } = 30;
+        
+#if ODIN_INSPECTOR
+        [TitleGroup("Model-Pure")]
+#endif
+        [OdinSerialize]
+        public int SSCostPerBossRushLevel { get; private set; } = 1000;
+        
+#if ODIN_INSPECTOR
+        [TitleGroup("Model-Pure")]
+#endif
+        [OdinSerialize]
+        public Rush BossRush { get; private set; }
+        
+        internal Rush.Runtime BossRushRuntime { get; set; }
         
         [OdinSerialize]
         public IPropertyType AOEBallRangeType { get; private set; }

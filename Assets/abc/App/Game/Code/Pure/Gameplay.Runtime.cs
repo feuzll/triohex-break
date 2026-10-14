@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using abc.App.Game.Code.Pure.Bosses;
 using R3;
 
 namespace abc.App.Game.Code.Pure
@@ -57,7 +58,8 @@ namespace abc.App.Game.Code.Pure
                     for (var i = 0; i < requiredArmoredCells && i < schemeCells.Length - 1; i++) 
                         schemeCells[i].IsArmoredProperty.Value = true;
                 });
-                
+
+                Context.BossRushRuntime = new Rush.Runtime(this, Context.BossRush);
                 
                 foreach (var (resourceType, loadAmount) in Context.StartingResources)
                     new Resource(Context, resourceType, loadAmount);

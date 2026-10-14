@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ObservableCollections;
 using R3;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace abc.App.Game.Code.Pure.Boss
+namespace abc.App.Game.Code.Pure.Bosses
 {
-    public class Rush
+    [Serializable]
+    public partial class Rush
     {
-        [OdinSerialize] public List<Base> BossesCycle { get; private set; }
+        [OdinSerialize] protected List<Boss> PremadeBossesCycle { get; private set; }
+        public List<Boss.Runtime> BossesCycle { get; private set; }
 #if UNITY_5_3_OR_NEWER
         [InlineProperty]
         [SerializeField] internal SerializableReactiveProperty<int> LevelProperty;
@@ -18,7 +21,7 @@ namespace abc.App.Game.Code.Pure.Boss
 #endif 
         public ReadOnlyReactiveProperty<int> Level => LevelProperty;
         
-        internal ObservableStack<(Base, int)> PendingFights { get; private set; }
+        internal ObservableStack<(Boss.Runtime, int)> PendingFights { get; private set; }
         
         internal readonly R3.ReactiveProperty<bool> IsFightingProperty = new(false);
         public ReadOnlyReactiveProperty<bool> IsFighting => IsFightingProperty;

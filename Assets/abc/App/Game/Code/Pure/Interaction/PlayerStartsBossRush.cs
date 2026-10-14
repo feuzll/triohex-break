@@ -1,4 +1,4 @@
-﻿using abc.App.Game.Code.Pure.Boss;
+﻿using abc.App.Game.Code.Pure.Bosses;
 using ObservableCollections;
 using R3;
 
@@ -10,13 +10,15 @@ namespace abc.App.Game.Code.Pure.Interaction
 
         private static readonly Subject<Unit> NewEvent = new();
 
-        internal static bool Try(Gameplay.Runtime gameplayRuntime, Rush rush)
+        internal static bool Try(Gameplay.Runtime gameplayRuntime, Rush.Runtime rushRuntime)
         {
+            var rush = rushRuntime.State;
             if (rush.IsFighting.CurrentValue) return false;
             if (rush.Level.CurrentValue <= 0) rush.LevelProperty.Value = 1;
             
             //guard resource deficit
-            var requiredSuperShards = rush.Level.CurrentValue * 1000;
+            var requiredSuperShards =
+                rush.Level.CurrentValue * gameplayRuntime.Context.SSCostPerBossRushLevel;
             var spendResult =
                 gameplayRuntime.Context.Resources[Resource.Type.SS].TrySpend(requiredSuperShards);
             if (spendResult == false) return false;
@@ -37,13 +39,13 @@ namespace abc.App.Game.Code.Pure.Interaction
                     rush.IsFightingProperty.Value = false;
                 });
             foreach (var f in rush.PendingFights)
-                f.Item1.Defeated.Subscribe(_ => 
+                f.Item1.Instance.Defeated.Subscribe(_ => 
                         HandleDefeatOf(rush, f.Item1))
                     .AddTo(rush.DefeatSubscriptions);
             return true;
         }
 
-        private static void HandleDefeatOf(Rush rush, Base boss)
+        private static void HandleDefeatOf(Rush rush, Boss.Runtime boss)
         {
             if (!rush.PendingFights.TryPeek(out var fight) 
                 || boss != fight.Item1) return;
@@ -54,7 +56,7 @@ namespace abc.App.Game.Code.Pure.Interaction
             else
             {
                 var next = rush.PendingFights.Peek(); 
-                next.Item1.HealthProperty.Value = next.Item2;
+                next.Item1.Revive(next.Item2);
             }
         }
     }

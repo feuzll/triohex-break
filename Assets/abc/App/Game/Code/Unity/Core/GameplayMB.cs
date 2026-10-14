@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using abc.App.Game.Code.Pure;
+using abc.App.Game.Code.Pure.Bosses;
+using abc.App.Game.Code.Pure.Interaction;
 using abc.App.Game.Code.Pure.UpgradableInt;
 using abc.App.Game.Code.Unity.Core.UpgradableInt;
 using R3;
@@ -51,7 +53,8 @@ namespace abc.App.Game.Code.Unity.Core
 
         [SerializeField] internal Sprite basicCellSprite;
         [SerializeField] internal Sprite armoredCellSprite;
-        
+        [SerializeField] internal Button bossRushEnter;
+        [SerializeField] internal Button bossRushExit;
         
         private void Awake()
         {
@@ -183,6 +186,13 @@ namespace abc.App.Game.Code.Unity.Core
                 foreach (var ballMB in Balls) Destroy(ballMB.gameObject);
                 State.levelProperty.Value = 1;
             });
+            
+            
+            
+            bossRushEnter.onClick.AddListener(() =>
+                PlayerStartsBossRush.Try(_runtime, State.BossRushRuntime));
+            bossRushEnter.onClick.AddListener(() =>
+                PlayerExitsBossRush.Raise(_runtime, State.BossRushRuntime));
 
             this.State.Tick.Subscribe(_ =>
                 State.PointerPosition =
