@@ -14,8 +14,7 @@ namespace abc.App.Game.Code.Pure.Bosses
                 GameplayRuntime = gameplayRuntime;
                 Instance = instance;
                 Instance.Driver = this;
-                if (Instance.HealthProperty.CurrentValue < 1000000) 
-                    Instance.HealthProperty.Value = 1000000;
+                Instance.HealthProperty = new(0);
                 Instance.Defeated = Instance.HealthProperty.Select(h => h <= 0)
                     .DistinctUntilChanged()
                     .Where(b => b)

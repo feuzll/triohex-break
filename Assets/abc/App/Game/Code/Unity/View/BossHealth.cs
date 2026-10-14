@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace abc.App.Game.Code.Unity.View
 {
+    [RequireComponent(typeof(TMPro.TextMeshPro))]
     public class BossHealth : MonoBehaviour
     {
         [SerializeField] private BossMB bossBind;
@@ -18,10 +19,10 @@ namespace abc.App.Game.Code.Unity.View
 
         private void Start()
         {
-            bossBind.Instance.Health.Subscribe(next =>
+            bossBind.Pure.Health.Subscribe(next =>
             {
-                _indicator.text = bossBind.Instance.Health.CurrentValue.ToString();
-                gameObject.SetActive(bossBind.Instance.Health.CurrentValue > 0);
+                _indicator.text = bossBind.Pure.Health.CurrentValue.ToString();
+                gameObject.SetActive(bossBind.Pure.Health.CurrentValue > 0);
             });
         }
 

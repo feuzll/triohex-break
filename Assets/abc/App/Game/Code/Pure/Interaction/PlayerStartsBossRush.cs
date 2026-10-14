@@ -12,6 +12,13 @@ namespace abc.App.Game.Code.Pure.Interaction
 
         internal static bool Try(Gameplay.Runtime gameplayRuntime, Rush.Runtime rushRuntime)
         {
+            //TODO: introduce InRush along with InFight - we should quit manually
+            //TODO: what about endless splitter balls after fight though...
+            
+            //TODO: do we respecting possible prestige mid fight?
+            
+            //TODO: sniper balls retarget to bosses
+            
             var rush = rushRuntime.State;
             if (rush.IsFighting.CurrentValue) return false;
             if (rush.Level.CurrentValue <= 0) rush.LevelProperty.Value = 1;
@@ -26,16 +33,18 @@ namespace abc.App.Game.Code.Pure.Interaction
             //plan boss fights
             rush.PendingFights.Clear();
             for (var i = 0; i < rush.Level.CurrentValue; i++)
-                rush.PendingFights.Push(
+                rush.PendingFights.Enqueue(
                     (rush.BossesCycle[i%rush.BossesCycle.Count], 1000000 * i));
+            var entryBossFight = rush.PendingFights.Peek();
+            entryBossFight.Item1.Revive(entryBossFight.Item2);
             rush.IsFightingProperty.Value = true;
-            rush.PendingFights.ObserveCountChanged(true)
+            rush.RewardSubscription = rush.PendingFights.ObserveCountChanged(true)
                 .Where(c => c == 0)
                 .Take(1)
                 .Subscribe(_ =>
                 {
-                    if (!rush.IsFighting.CurrentValue) return;
                     rush.LevelProperty.Value++; //reward
+                    gameplayRuntime.Context.Resources[Resource.Type.Skill].AmountProperty.Value++;
                     rush.IsFightingProperty.Value = false;
                 });
             foreach (var f in rush.PendingFights)
@@ -50,7 +59,8 @@ namespace abc.App.Game.Code.Pure.Interaction
             if (!rush.PendingFights.TryPeek(out var fight) 
                 || boss != fight.Item1) return;
             
-            rush.PendingFights.Pop();
+            
+            rush.PendingFights.Dequeue();
             if (rush.PendingFights.Count == 0) 
                 rush.IsFightingProperty.Value = false;
             else

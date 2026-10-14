@@ -186,12 +186,15 @@ namespace abc.App.Game.Code.Unity.Core
                 foreach (var ballMB in Balls) Destroy(ballMB.gameObject);
                 State.levelProperty.Value = 1;
             });
-            
-            
+
+
+
+            State.BossRushRuntime.State.IsFighting.Subscribe(inFight =>
+                transform.position = inFight ? new Vector3(50, 0, 0) : Vector3.zero);
             
             bossRushEnter.onClick.AddListener(() =>
                 PlayerStartsBossRush.Try(_runtime, State.BossRushRuntime));
-            bossRushEnter.onClick.AddListener(() =>
+            bossRushExit.onClick.AddListener(() =>
                 PlayerExitsBossRush.Raise(_runtime, State.BossRushRuntime));
 
             this.State.Tick.Subscribe(_ =>

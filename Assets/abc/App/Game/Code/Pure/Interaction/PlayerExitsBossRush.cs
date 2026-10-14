@@ -12,6 +12,7 @@ namespace abc.App.Game.Code.Pure.Interaction
         internal static void Raise(Gameplay.Runtime gameplayRuntime, Rush.Runtime rushRuntime)
         {
             var rush = rushRuntime.State;
+            rush.RewardSubscription.Dispose();
             rush.IsFightingProperty.Value = false;
             rush.PendingFights.Clear();
             rush.DefeatSubscriptions.Clear();

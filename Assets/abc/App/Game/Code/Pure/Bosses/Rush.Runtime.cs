@@ -9,9 +9,12 @@
             {
                 State = rush;
                 State.BossesCycle = new();
+                State.IsFightingProperty = new(false);
+                State.PendingFights = new();
+                State.DefeatSubscriptions = new();
                 foreach (var boss in rush.PremadeBossesCycle)
                 {
-                    State.BossesCycle.Add(new Boss.Runtime(gameplayRuntime, boss));
+                    State.BossesCycle.Add(new Boss.Runtime(gameplayRuntime, boss.Pure));
                 }
             }
         }
